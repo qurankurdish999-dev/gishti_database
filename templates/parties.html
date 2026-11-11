@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}لایەنەکان{% endblock %}
+{% block content %}
+<h2 class="page-title"><span class="icon">🧑‍🤝‍🧑</span> لایەنەکان (کڕیار / دابینکەر)</h2>
+
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">زیادکردنی لایەنی نوێ</div>
+      <div class="card-body">
+        <form method="POST">
+          <div class="mb-2">
+            <label class="form-label">ناو *</label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">ژمارەی مۆبایل</label>
+            <input type="text" name="phone" class="form-control">
+          </div>
+          <div class="mb-2">
+            <label class="form-label">جۆری لایەن</label>
+            <select name="party_type" class="form-select">
+              <option value="customer">کڕیار</option>
+              <option value="supplier">دابینکەر</option>
+              <option value="both">هەردووکیان</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">باڵانسی سەرەتا</label>
+            <input type="number" step="0.01" name="opening_balance" class="form-control" value="0">
+          </div>
+          <div class="mb-2">
+            <label class="form-label">تێبینی</label>
+            <textarea name="notes" class="form-control" rows="2"></textarea>
+          </div>
+          <button class="btn btn-primary w-100" type="submit"><span class="icon">➕</span> زیادکردن</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <form class="mb-3" method="GET">
+      <div class="input-group" style="max-width:350px">
+        <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="گەڕان بە ناو یان مۆبایل...">
+        <button class="btn btn-outline-secondary" type="submit"><span class="icon">🔍</span></button>
+      </div>
+    </form>
+    <div class="card">
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+          <thead><tr><th>ناو</th><th>مۆبایل</th><th>جۆر</th><th>باڵانس</th><th>کردار</th></tr></thead>
+          <tbody>
+          {% for p in parties %}
+            <tr>
+              <td>{{ p.name }}</td>
+              <td>{{ p.phone or '-' }}</td>
+              <td>
+                {% if p.party_type == 'customer' %}<span class="badge bg-primary">کڕیار</span>
+                {% elif p.party_type == 'supplier' %}<span class="badge bg-warning">دابینکەر</span>
+                {% else %}<span class="badge bg-secondary">هەردووکیان</span>{% endif %}
+              </td>
+              <td class="{{ 'text-danger' if p.balance > 0 else '' }}">{{ "%.0f"|format(p.balance) }}</td>
+              <td>
+                <a href="{{ url_for('edit_party', party_id=p.id) }}" class="btn btn-sm btn-outline-primary">✏️</a>
+                <a href="{{ url_for('delete_party', party_id=p.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('دڵنیای؟')">🗑️</a>
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="5" class="text-center text-muted py-4">هیچ لایەنێک نییە</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

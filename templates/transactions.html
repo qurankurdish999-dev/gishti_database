@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}بەڵگەکان{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="page-title mb-0"><span class="icon">🧾</span> بەڵگەکان (دان / وەرگرتن / خەرجی / داشکاندن / گواستنەوە)</h2>
+  <a href="{{ url_for('new_transaction') }}" class="btn btn-primary"><span class="icon">➕</span> بەڵگەی نوێ</a>
+</div>
+
+<div class="mb-3 d-flex" style="gap:8px; flex-wrap:wrap">
+  <a href="{{ url_for('transactions') }}" class="btn btn-sm {{ 'btn-primary' if not active_type else 'btn-outline-secondary' }}">هەموو</a>
+  {% for key, label in labels.items() %}
+    <a href="{{ url_for('transactions', type=key) }}" class="btn btn-sm {{ 'btn-primary' if active_type == key else 'btn-outline-secondary' }}">{{ label }}</a>
+  {% endfor %}
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>جۆر</th><th>لایەن</th><th>بۆ لایەن</th><th>بڕ</th><th>تێبینی</th><th>کات</th></tr></thead>
+      <tbody>
+      {% for t in transactions %}
+        <tr>
+          <td>{{ labels.get(t.trans_type, t.trans_type) }}</td>
+          <td>{{ t.party_name or '-' }}</td>
+          <td>{{ t.to_party_name or '-' }}</td>
+          <td>{{ "%.0f"|format(t.amount) }}</td>
+          <td>{{ t.note or '-' }}</td>
+          <td>{{ t.trans_date }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="text-center text-muted py-4">هیچ بەڵگەیەک نییە</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

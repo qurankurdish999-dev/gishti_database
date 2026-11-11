@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}جۆرەکان{% endblock %}
+{% block content %}
+<h2 class="page-title"><span class="icon">🏷️</span> جۆرەکانی کاڵا</h2>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">زیادکردنی جۆری نوێ</div>
+      <div class="card-body">
+        <form method="POST">
+          <input type="text" name="name" class="form-control mb-2" placeholder="ناوی جۆر" required>
+          <button class="btn btn-primary w-100" type="submit"><span class="icon">➕</span> زیادکردن</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-body p-0">
+        <table class="table mb-0">
+          <thead><tr><th>#</th><th>ناوی جۆر</th><th>کردار</th></tr></thead>
+          <tbody>
+          {% for c in categories %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ c.name }}</td>
+              <td><a href="{{ url_for('delete_category', cat_id=c.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('دڵنیای؟')"><span class="icon">🗑️</span></a></td>
+            </tr>
+          {% else %}
+            <tr><td colspan="3" class="text-center text-muted py-3">هیچ جۆرێک نییە</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}{{ 'دەستکاریکردنی کاڵا' if product else 'زیادکردنی کاڵا' }}{% endblock %}
+{% block content %}
+<h2 class="page-title">
+  <span class="icon">📦</span>
+  {{ 'دەستکاریکردنی کاڵا' if product else 'زیادکردنی کاڵای نوێ' }}
+</h2>
+
+<div class="card" style="max-width:700px">
+  <div class="card-body">
+    <form method="POST">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">ناوی کاڵا *</label>
+          <input type="text" name="name" class="form-control" required value="{{ product.name if product else '' }}">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">بارکۆد</label>
+          <input type="text" name="barcode" class="form-control" value="{{ product.barcode if product else '' }}">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">جۆر</label>
+          <select name="category_id" class="form-select">
+            <option value="">-- هەڵبژاردن --</option>
+            {% for c in categories %}
+              <option value="{{ c.id }}" {% if product and product.category_id == c.id %}selected{% endif %}>{{ c.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">یەکە (دانە، کیلۆ، پاکێت...)</label>
+          <input type="text" name="unit" class="form-control" value="{{ product.unit if product else 'دانە' }}">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">نرخی کڕین</label>
+          <input type="number" step="0.01" name="purchase_price" class="form-control" value="{{ product.purchase_price if product else 0 }}">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">نرخی فرۆشتن *</label>
+          <input type="number" step="0.01" name="sale_price" class="form-control" required value="{{ product.sale_price if product else 0 }}">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">بڕی هەیە</label>
+          <input type="number" step="0.01" name="quantity" class="form-control" value="{{ product.quantity if product else 0 }}">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">کەمترین بڕ (ئاگاداری)</label>
+          <input type="number" step="0.01" name="min_quantity" class="form-control" value="{{ product.min_quantity if product else 5 }}">
+        </div>
+      </div>
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary"><span class="icon">💾</span> هەڵگرتن</button>
+        <a href="{{ url_for('products') }}" class="btn btn-secondary">پاشگەزبوونەوە</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

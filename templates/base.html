@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}سیستەمی داتابەیسی گشتی{% endblock %}</title>
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo.png') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+{% if session.get('user_id') %}
+<div class="app-shell">
+
+  <aside class="icon-sidebar">
+    <a href="{{ url_for('logout') }}" class="side-icon-btn" title="دەرچوون">🚪</a>
+    {% if current_role == 'admin' %}
+    <a href="{{ url_for('users') }}" class="side-icon-btn" title="بەکارهێنەران">👥</a>
+    {% endif %}
+    <a href="{{ url_for('categories') }}" class="side-icon-btn" title="جۆرەکان">⚙️</a>
+  </aside>
+
+  <div class="app-col">
+    <header class="topbar">
+      {% if request.endpoint != 'dashboard' %}
+        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary btn-sm topbar-home">
+          <span class="icon">🏠</span> سەرەتا
+        </a>
+      {% else %}
+        <span></span>
+      {% endif %}
+      <div class="topbar-title">سیستەمی بەڕێوەبردنی فرۆشتن و کۆگا</div>
+      <div class="topbar-user"><span class="icon">👤</span> {{ current_user }}</div>
+    </header>
+
+    <main class="app-main">
+      <div class="container-fluid py-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" onclick="this.parentElement.remove()">✕</button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <span>سیستەمی داتابەیسی گشتی — وەشان 1.0</span>
+    </footer>
+  </div>
+</div>
+{% else %}
+  {% block guest_content %}{% endblock %}
+{% endif %}
+
+{% block scripts %}{% endblock %}
+</body>
+</html>

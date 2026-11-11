@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block title %}فرۆشتنی نوێ{% endblock %}
+{% block content %}
+<h2 class="page-title"><span class="icon">💰</span> فرۆشتنی نوێ</h2>
+
+<div class="row g-3">
+  <div class="col-md-7">
+    <div class="card mb-3">
+      <div class="card-body">
+        <label class="form-label">گەڕان بۆ کاڵا (ناو یان بارکۆد)</label>
+        <input type="text" id="searchBox" class="form-control form-control-lg" placeholder="بنووسە بۆ گەڕان..." autofocus>
+        <div id="searchResults" class="list-group mt-2"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-5">
+    <div class="card">
+      <div class="card-header">سەبەتەی فرۆشتن</div>
+      <div class="card-body">
+        <table class="table" id="cartTable">
+          <thead><tr><th>ناو</th><th>بڕ</th><th>نرخ</th><th>کۆ</th><th></th></tr></thead>
+          <tbody id="cartBody"></tbody>
+        </table>
+
+        <div class="mb-2">
+          <label class="form-label">کڕیاری تۆمارکراو (بۆ چاوەدێری قەرز — ئارەزوومەندانە)</label>
+          <select id="partySelect" class="form-select">
+            <option value="">-- کڕیاری ئاسایی (بەبێ تۆمار) --</option>
+            {% for c in customers %}
+              <option value="{{ c.id }}">{{ c.name }}{% if c.phone %} — {{ c.phone }}{% endif %}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">ناوی کڕیار (ئارەزوومەندانە)</label>
+          <input type="text" id="customerName" class="form-control">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">داشکاندن</label>
+          <input type="number" id="discount" class="form-control" value="0">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">بڕی درا</label>
+          <input type="number" id="paid" class="form-control" value="0">
+        </div>
+
+        <h4 class="text-end">کۆی گشتی: <span id="grandTotal">0</span></h4>
+        <button class="btn btn-success w-100 btn-lg" id="checkoutBtn"><span class="icon">✔️</span> تەواوکردنی فرۆشتن</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let cart = [];
+
+const searchBox = document.getElementById('searchBox');
+const searchResults = document.getElementById('searchResults');
+const cartBody = document.getElementById('cartBody');
+const grandTotal = document.getElementById('grandTotal');
+
+searchBox.addEventListener('input', async () => {
+  const q = searchBox.value.trim();
+  if (q.length === 0) { searchResults.innerHTML = ''; return; }
+  const res = await fetch(`/api/search_products?q=${encodeURIComponent(q)}`);
+  const data = await res.json();
+  searchResults.innerHTML = data.map(p => `
+    <a href="#" class="list-group-item list-group-item-action" onclick="addToCart(${p.id}, '${p.name.replace(/'/g, "\\'")}', ${p.sale_price}, ${p.quantity}); return false;">
+      <div class="d-flex justify-content-between">
+        <span>${p.name}</span>
+        <span class="text-muted">نرخ: ${p.sale_price} | هەیە: ${p.quantity} ${p.unit}</span>
+      </div>
+    </a>
+  `).join('');
+});
+
+function addToCart(id, name, price, available) {
+  const existing = cart.find(i => i.id === id);
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push({ id, name, price, quantity: 1, available });
+  }
+  renderCart();
+  searchBox.value = '';
+  searchResults.innerHTML = '';
+  searchBox.focus();
+}
+
+function updateQty(id, qty) {
+  const item = cart.find(i => i.id === id);
+  if (item) item.quantity = Math.max(0.01, parseFloat(qty) || 1);
+  renderCart();
+}
+
+function removeItem(id) {
+  cart = cart.filter(i => i.id !== id);
+  renderCart();
+}
+
+function renderCart() {
+  cartBody.innerHTML = cart.map(i => `
+    <tr>
+      <td>${i.name}</td>
+      <td><input type="number" step="0.01" value="${i.quantity}" style="width:70px" class="form-control form-control-sm" onchange="updateQty(${i.id}, this.value)"></td>
+      <td>${i.price}</td>
+      <td>${(i.price * i.quantity).toFixed(0)}</td>
+      <td><button class="btn btn-sm btn-outline-danger" onclick="removeItem(${i.id})"><span class="icon">✕</span></button></td>
+    </tr>
+  `).join('');
+  calcTotal();
+}
+
+function calcTotal() {
+  const discount = parseFloat(document.getElementById('discount').value) || 0;
+  const sub = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+  grandTotal.textContent = Math.max(0, sub - discount).toFixed(0);
+}
+
+document.getElementById('discount').addEventListener('input', calcTotal);
+
+document.getElementById('checkoutBtn').addEventListener('click', async () => {
+  if (cart.length === 0) { alert('سەبەتەکە بەتاڵە'); return; }
+  const payload = {
+    items: cart,
+    discount: parseFloat(document.getElementById('discount').value) || 0,
+    paid: parseFloat(document.getElementById('paid').value) || 0,
+    customer_name: document.getElementById('customerName').value,
+    party_id: document.getElementById('partySelect').value || null,
+  };
+  const res = await fetch('/api/checkout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (data.success) {
+    window.location.href = `/sales/${data.sale_id}`;
+  } else {
+    alert(data.message || 'هەڵەیەک ڕوویدا');
+  }
+});
+</script>
+{% endblock %}

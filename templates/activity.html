@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}تۆماری چالاکی{% endblock %}
+{% block content %}
+<h2 class="page-title"><span class="icon">📜</span> تۆماری چالاکی سیستەم</h2>
+
+<div class="card">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>کات</th><th>بەکارهێنەر</th><th>کردار</th><th>بەش</th><th>وردەکاری</th></tr></thead>
+      <tbody>
+      {% for l in logs %}
+        <tr>
+          <td>{{ l.log_time }}</td>
+          <td>{{ l.user_name or '-' }}</td>
+          <td>{{ l.action }}</td>
+          <td>{{ l.entity_type }}</td>
+          <td>{{ l.description }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5" class="text-center text-muted py-4">هیچ چالاکییەک تۆمار نەکراوە</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}جووڵەی ئەمڕۆ{% endblock %}
+{% block content %}
+<h2 class="page-title"><span class="icon">📅</span> جووڵەی ئەمڕۆ</h2>
+
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header"><span class="icon">💰</span> فرۆشتنی ئەمڕۆ ({{ sales_today|length }})</div>
+      <div class="card-body p-0">
+        <table class="table mb-0">
+          <thead><tr><th>ژمارە</th><th>کۆ</th></tr></thead>
+          <tbody>
+          {% for s in sales_today %}
+            <tr><td><a href="{{ url_for('sale_detail', sale_id=s.id) }}">{{ s.invoice_number }}</a></td><td>{{ "%.0f"|format(s.total) }}</td></tr>
+          {% else %}
+            <tr><td colspan="2" class="text-center text-muted py-3">هیچ نییە</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header"><span class="icon">🛒</span> کڕینی ئەمڕۆ ({{ purchases_today|length }})</div>
+      <div class="card-body p-0">
+        <table class="table mb-0">
+          <thead><tr><th>ژمارە</th><th>دابینکەر</th><th>کۆ</th></tr></thead>
+          <tbody>
+          {% for p in purchases_today %}
+            <tr><td><a href="{{ url_for('purchase_detail', purchase_id=p.id) }}">{{ p.invoice_number }}</a></td><td>{{ p.party_name or '-' }}</td><td>{{ "%.0f"|format(p.total) }}</td></tr>
+          {% else %}
+            <tr><td colspan="3" class="text-center text-muted py-3">هیچ نییە</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header"><span class="icon">🧾</span> بەڵگەکانی ئەمڕۆ ({{ trans_today|length }})</div>
+      <div class="card-body p-0">
+        <table class="table mb-0">
+          <thead><tr><th>جۆر</th><th>لایەن</th><th>بڕ</th></tr></thead>
+          <tbody>
+          {% for t in trans_today %}
+            <tr><td>{{ labels.get(t.trans_type, t.trans_type) }}</td><td>{{ t.party_name or '-' }}</td><td>{{ "%.0f"|format(t.amount) }}</td></tr>
+          {% else %}
+            <tr><td colspan="3" class="text-center text-muted py-3">هیچ نییە</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

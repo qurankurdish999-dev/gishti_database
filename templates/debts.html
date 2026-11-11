@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}قەرزەکان و باڵانس{% endblock %}
+{% block content %}
+<h2 class="page-title"><span class="icon">⚖️</span> قەرزەکان و باڵانسی لایەنەکان</h2>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-6">
+    <div class="stat-card bg-danger">
+      <span class="icon">📥</span>
+      <div>
+        <div class="stat-num">{{ "%.0f"|format(total_customer_debt) }}</div>
+        <div class="stat-label">کۆی قەرزی کڕیارەکان بۆ ئێمە</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="stat-card bg-warning">
+      <span class="icon">📤</span>
+      <div>
+        <div class="stat-num">{{ "%.0f"|format(total_supplier_debt) }}</div>
+        <div class="stat-label">کۆی قەرزی ئێمە بۆ دابینکەرەکان</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>ناو</th><th>جۆر</th><th>مۆبایل</th><th>باڵانس</th></tr></thead>
+      <tbody>
+      {% for p in parties %}
+        <tr>
+          <td>{{ p.name }}</td>
+          <td>
+            {% if p.party_type == 'customer' %}<span class="badge bg-primary">کڕیار</span>
+            {% elif p.party_type == 'supplier' %}<span class="badge bg-warning">دابینکەر</span>
+            {% else %}<span class="badge bg-secondary">هەردووکیان</span>{% endif %}
+          </td>
+          <td>{{ p.phone or '-' }}</td>
+          <td class="{{ 'text-danger' if p.balance > 0 else '' }}">
+            {{ "%.0f"|format(p.balance) }}
+            {% if p.balance > 0 %}
+              <span class="small text-muted">({{ 'قەرزارن بۆ ئێمە' if p.party_type != 'supplier' else 'قەرزارین بۆیان' }})</span>
+            {% elif p.balance < 0 %}
+              <span class="small text-muted">(زیادەیان لای ئێمەیە)</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="4" class="text-center text-muted py-4">هیچ لایەنێک نییە</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}سەبەتەی سڕاوەکان{% endblock %}
+{% block content %}
+<h2 class="page-title"><span class="icon">🗑️</span> سەبەتەی سڕاوەکان</h2>
+<p class="text-muted">تۆمارە سڕاوەکان لێرە هەڵدەگیرێن — دەتوانیت بیانگەڕێنیتەوە یان بۆ هەمیشە بیانسڕیتەوە.</p>
+
+<div class="card">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>جۆر</th><th>ناو</th><th>کاتی سڕینەوە</th><th>سڕاوە لەلایەن</th><th>کردار</th></tr></thead>
+      <tbody>
+      {% for item in items %}
+        <tr>
+          <td>{{ item.label }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.deleted_at }}</td>
+          <td>{{ item.deleted_by or '-' }}</td>
+          <td>
+            <a href="{{ url_for('restore_item', bin_id=item.id) }}" class="btn btn-sm btn-outline-primary"><span class="icon">↩️</span> گەڕاندنەوە</a>
+            <a href="{{ url_for('delete_forever', bin_id=item.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('ئایا دڵنیایت؟ ئەمە بۆ هەمیشە دەیسڕێتەوە!')"><span class="icon">✕</span> سڕینەوەی هەمیشەیی</a>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5" class="text-center text-muted py-4">سەبەتەی سڕاوەکان بەتاڵە</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

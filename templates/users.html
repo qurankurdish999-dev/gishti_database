@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}بەکارهێنەران{% endblock %}
+{% block content %}
+<h2 class="page-title"><span class="icon">👥</span> بەکارهێنەرانی سیستەم</h2>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">زیادکردنی بەکارهێنەر</div>
+      <div class="card-body">
+        <form method="POST">
+          <div class="mb-2">
+            <label class="form-label">ناوی تەواو</label>
+            <input type="text" name="fullname" class="form-control">
+          </div>
+          <div class="mb-2">
+            <label class="form-label">ناوی بەکارهێنەر</label>
+            <input type="text" name="username" class="form-control" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">وشەی نهێنی</label>
+            <input type="password" name="password" class="form-control" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">ڕۆڵ</label>
+            <select name="role" class="form-select">
+              <option value="staff">کارمەند</option>
+              <option value="admin">بەڕێوەبەر</option>
+            </select>
+          </div>
+          <button class="btn btn-primary w-100" type="submit"><span class="icon">➕</span> زیادکردن</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-body p-0">
+        <table class="table mb-0">
+          <thead><tr><th>ناوی تەواو</th><th>ناوی بەکارهێنەر</th><th>ڕۆڵ</th><th>کردار</th></tr></thead>
+          <tbody>
+          {% for u in users %}
+            <tr>
+              <td>{{ u.fullname }}</td>
+              <td>{{ u.username }}</td>
+              <td><span class="badge bg-secondary">{{ u.role }}</span></td>
+              <td><a href="{{ url_for('delete_user', user_id=u.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('دڵنیای؟')"><span class="icon">🗑️</span></a></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

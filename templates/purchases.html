@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}کڕینەکان{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="page-title mb-0"><span class="icon">🛒</span> مێژووی کڕین</h2>
+  <a href="{{ url_for('new_purchase') }}" class="btn btn-primary"><span class="icon">➕</span> کڕینی نوێ</a>
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>ژمارەی پسووڵە</th><th>دابینکەر</th><th>کۆی گشتی</th><th>دراوە</th><th>کات</th><th></th></tr></thead>
+      <tbody>
+      {% for p in purchases %}
+        <tr>
+          <td>{{ p.invoice_number }}</td>
+          <td>{{ p.party_name or '-' }}</td>
+          <td>{{ "%.0f"|format(p.total) }}</td>
+          <td>{{ "%.0f"|format(p.paid) }}</td>
+          <td>{{ p.purchase_date }}</td>
+          <td><a href="{{ url_for('purchase_detail', purchase_id=p.id) }}" class="btn btn-sm btn-outline-primary"><span class="icon">👁️</span> بینین</a></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="text-center text-muted py-4">هیچ کڕینێک نییە</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

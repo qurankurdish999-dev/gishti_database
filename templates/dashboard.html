@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}سەرەتا{% endblock %}
+{% block content %}
+
+<div class="tile-grid">
+  <a href="{{ url_for('products') }}" class="tile">
+    <span class="tile-icon">📦</span>
+    <span class="tile-label">کاڵاکان</span>
+  </a>
+  <a href="{{ url_for('add_product') }}" class="tile">
+    <span class="tile-icon">➕</span>
+    <span class="tile-label">زیادکردنی کاڵا</span>
+  </a>
+  <a href="{{ url_for('categories') }}" class="tile">
+    <span class="tile-icon">🏷️</span>
+    <span class="tile-label">جۆرەکان</span>
+  </a>
+  <a href="{{ url_for('parties') }}" class="tile">
+    <span class="tile-icon">🧑‍🤝‍🧑</span>
+    <span class="tile-label">لایەنەکان (کڕیار/دابینکەر)</span>
+  </a>
+  <a href="{{ url_for('new_sale') }}" class="tile">
+    <span class="tile-icon">💰</span>
+    <span class="tile-label">فرۆشتنی نوێ</span>
+  </a>
+  <a href="{{ url_for('sales') }}" class="tile">
+    <span class="tile-icon">🧾</span>
+    <span class="tile-label">وەسڵەکانی فرۆشتن</span>
+  </a>
+  <a href="{{ url_for('new_purchase') }}" class="tile">
+    <span class="tile-icon">🛒</span>
+    <span class="tile-label">کڕینی نوێ</span>
+  </a>
+  <a href="{{ url_for('purchases') }}" class="tile">
+    <span class="tile-icon">📥</span>
+    <span class="tile-label">مێژووی کڕین</span>
+  </a>
+  <a href="{{ url_for('transactions', type='receipt') }}" class="tile">
+    <span class="tile-icon">💵</span>
+    <span class="tile-label">وەرگرتنی پارە</span>
+  </a>
+  <a href="{{ url_for('transactions', type='payment') }}" class="tile">
+    <span class="tile-icon">💸</span>
+    <span class="tile-label">دانی پارە</span>
+  </a>
+  <a href="{{ url_for('transactions', type='expense_general') }}" class="tile">
+    <span class="tile-icon">🧮</span>
+    <span class="tile-label">خەرجییەکان</span>
+  </a>
+  <a href="{{ url_for('transactions', type='discount') }}" class="tile">
+    <span class="tile-icon">➖</span>
+    <span class="tile-label">داشکاندنەکان</span>
+  </a>
+  <a href="{{ url_for('transactions', type='transfer') }}" class="tile">
+    <span class="tile-icon">🔄</span>
+    <span class="tile-label">گواستنەوە نێوان لایەنەکان</span>
+  </a>
+  <a href="{{ url_for('debts') }}" class="tile">
+    <span class="tile-icon">⚖️</span>
+    <span class="tile-label">قەرزەکان و باڵانس</span>
+  </a>
+  <a href="{{ url_for('today_movement') }}" class="tile">
+    <span class="tile-icon">📅</span>
+    <span class="tile-label">جووڵەی ئەمڕۆ</span>
+  </a>
+  <a href="{{ url_for('reports') }}" class="tile">
+    <span class="tile-icon">📈</span>
+    <span class="tile-label">ڕاپۆرتەکان</span>
+  </a>
+  <a href="{{ url_for('activity') }}" class="tile">
+    <span class="tile-icon">📜</span>
+    <span class="tile-label">تۆماری چالاکی</span>
+  </a>
+  <a href="{{ url_for('recycle_bin') }}" class="tile">
+    <span class="tile-icon">🗑️</span>
+    <span class="tile-label">سەبەتەی سڕاوەکان</span>
+  </a>
+  {% if current_role == 'admin' %}
+  <a href="{{ url_for('users') }}" class="tile">
+    <span class="tile-icon">👥</span>
+    <span class="tile-label">بەکارهێنەران</span>
+  </a>
+  {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}ڕاپۆرتەکان{% endblock %}
+{% block content %}
+<h2 class="page-title"><span class="icon">📈</span> ڕاپۆرتەکان</h2>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-3"><div class="stat-card bg-primary"><span class="icon">📦</span><div><div class="stat-num">{{ total_products }}</div><div class="stat-label">کۆی کاڵاکان</div></div></div></div>
+  <div class="col-md-3"><div class="stat-card bg-success"><span class="icon">💰</span><div><div class="stat-num">{{ "%.0f"|format(today_sales.s) }}</div><div class="stat-label">فرۆشتنی ئەمڕۆ ({{ today_sales.c }} وەسڵ)</div></div></div></div>
+  <div class="col-md-3"><div class="stat-card bg-info"><span class="icon">📅</span><div><div class="stat-num">{{ "%.0f"|format(month_sales.s) }}</div><div class="stat-label">فرۆشتنی ئەم مانگە</div></div></div></div>
+  <div class="col-md-3"><div class="stat-card bg-warning"><span class="icon">🏬</span><div><div class="stat-num">{{ "%.0f"|format(total_stock_value) }}</div><div class="stat-label">نرخی گشتی کۆگا</div></div></div></div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header"><span class="icon">🧾</span> دوایین وەسڵەکان</div>
+  <div class="card-body p-0">
+    <table class="table mb-0">
+      <thead><tr><th>ژمارە</th><th>کۆ</th><th>کات</th></tr></thead>
+      <tbody>
+      {% for s in recent_sales %}
+        <tr>
+          <td><a href="{{ url_for('sale_detail', sale_id=s.id) }}">{{ s.invoice_number }}</a></td>
+          <td>{{ "%.0f"|format(s.total) }}</td>
+          <td>{{ s.sale_date }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="3" class="text-center text-muted py-3">هیچ فرۆشتنێک نییە</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">فرۆشتنی ڕۆژانە (30 ڕۆژی کۆتایی)</div>
+      <div class="card-body p-0">
+        <table class="table mb-0">
+          <thead><tr><th>بەروار</th><th>ژمارەی وەسڵ</th><th>کۆی فرۆشتن</th></tr></thead>
+          <tbody>
+          {% for d in daily %}
+            <tr><td>{{ d.d }}</td><td>{{ d.cnt }}</td><td>{{ "%.0f"|format(d.total) }}</td></tr>
+          {% else %}
+            <tr><td colspan="3" class="text-center text-muted py-3">داتا نییە</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card mb-3">
+      <div class="card-header">باشترین کاڵا فرۆشراوەکان</div>
+      <div class="card-body p-0">
+        <table class="table mb-0">
+          <thead><tr><th>کاڵا</th><th>بڕی فرۆشراو</th><th>کۆی بەرهەم</th></tr></thead>
+          <tbody>
+          {% for b in best_sellers %}
+            <tr><td>{{ b.product_name }}</td><td>{{ b.total_qty }}</td><td>{{ "%.0f"|format(b.total_amount) }}</td></tr>
+          {% else %}
+            <tr><td colspan="3" class="text-center text-muted py-3">داتا نییە</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header text-danger"><span class="icon">⚠️</span> کاڵای کەمبوونەوە</div>
+      <div class="card-body p-0">
+        <table class="table mb-0">
+          <thead><tr><th>کاڵا</th><th>بڕی ماوە</th></tr></thead>
+          <tbody>
+          {% for p in low_stock %}
+            <tr><td>{{ p.name }}</td><td>{{ p.quantity }}</td></tr>
+          {% else %}
+            <tr><td colspan="2" class="text-center text-muted py-3">هیچ نییە</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

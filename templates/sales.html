@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}وەسڵەکان{% endblock %}
+{% block content %}
+<h2 class="page-title"><span class="icon">🧾</span> مێژووی فرۆشتن</h2>
+
+<div class="card">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <thead><tr><th>ژمارەی وەسڵ</th><th>کڕیار</th><th>کۆی گشتی</th><th>داشکاندن</th><th>کات</th><th></th></tr></thead>
+      <tbody>
+      {% for s in sales %}
+        <tr>
+          <td>{{ s.invoice_number }}</td>
+          <td>{{ s.customer_name or '-' }}</td>
+          <td>{{ "%.0f"|format(s.total) }}</td>
+          <td>{{ "%.0f"|format(s.discount) }}</td>
+          <td>{{ s.sale_date }}</td>
+          <td><a href="{{ url_for('sale_detail', sale_id=s.id) }}" class="btn btn-sm btn-outline-primary"><span class="icon">👁️</span> بینین</a></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="text-center text-muted py-4">هیچ وەسڵێک نییە</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

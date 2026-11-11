@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}چوونەژوورەوە{% endblock %}
+{% block guest_content %}
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="text-center mb-4">
+      <span class="icon login-icon">🗄️</span>
+      <h3 class="mt-2">سیستەمی داتابەیسی گشتی</h3>
+      <p class="text-muted">بۆ دەرمانخانە، کافتریا، مارکێت و دائیرەکان</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+      <div class="mb-3">
+        <label class="form-label">ناوی بەکارهێنەر</label>
+        <input type="text" name="username" class="form-control" required autofocus>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">وشەی نهێنی</label>
+        <input type="password" name="password" class="form-control" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">چوونەژوورەوە</button>
+    </form>
+    <p class="text-muted small text-center mt-3">بەکارهێنەری سەرەتایی: admin / admin123</p>
+  </div>
+</div>
+{% endblock %}

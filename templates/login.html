@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}چوونەژوورەوە{% endblock %}
+{% block guest_content %}
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="text-center mb-4">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="" class="login-logo">
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+      <div class="mb-3">
+        <input type="text" name="username" class="form-control" placeholder="ناوی بەکارهێنەر" required autofocus>
+      </div>
+      <div class="mb-3">
+        <input type="password" name="password" class="form-control" placeholder="وشەی نهێنی" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">چوونەژوورەوە</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

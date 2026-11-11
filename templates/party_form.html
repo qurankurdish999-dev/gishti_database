@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}دەستکاریکردنی لایەن{% endblock %}
+{% block content %}
+<h2 class="page-title"><span class="icon">🧑‍🤝‍🧑</span> دەستکاریکردنی لایەن</h2>
+
+<div class="card" style="max-width:600px">
+  <div class="card-body">
+    <form method="POST">
+      <div class="mb-2">
+        <label class="form-label">ناو *</label>
+        <input type="text" name="name" class="form-control" required value="{{ party.name }}">
+      </div>
+      <div class="mb-2">
+        <label class="form-label">ژمارەی مۆبایل</label>
+        <input type="text" name="phone" class="form-control" value="{{ party.phone or '' }}">
+      </div>
+      <div class="mb-2">
+        <label class="form-label">جۆری لایەن</label>
+        <select name="party_type" class="form-select">
+          <option value="customer" {% if party.party_type=='customer' %}selected{% endif %}>کڕیار</option>
+          <option value="supplier" {% if party.party_type=='supplier' %}selected{% endif %}>دابینکەر</option>
+          <option value="both" {% if party.party_type=='both' %}selected{% endif %}>هەردووکیان</option>
+        </select>
+      </div>
+      <div class="mb-2">
+        <label class="form-label">باڵانسی سەرەتا</label>
+        <input type="number" step="0.01" name="opening_balance" class="form-control" value="{{ party.opening_balance }}">
+      </div>
+      <div class="mb-2">
+        <label class="form-label">تێبینی</label>
+        <textarea name="notes" class="form-control" rows="2">{{ party.notes or '' }}</textarea>
+      </div>
+      <button class="btn btn-primary" type="submit"><span class="icon">💾</span> هەڵگرتن</button>
+      <a href="{{ url_for('parties') }}" class="btn btn-secondary">پاشگەزبوونەوە</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

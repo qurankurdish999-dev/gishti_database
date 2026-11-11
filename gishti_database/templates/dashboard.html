@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}سەرەتا{% endblock %}
+{% block content %}
+
+<div class="tile-grid">
+  <a href="{{ url_for('products') }}" class="tile">
+    <span class="tile-icon">📦</span>
+    <span class="tile-label">کاڵاکان</span>
+  </a>
+  <a href="{{ url_for('add_product') }}" class="tile">
+    <span class="tile-icon">➕</span>
+    <span class="tile-label">زیادکردنی کاڵا</span>
+  </a>
+  <a href="{{ url_for('categories') }}" class="tile">
+    <span class="tile-icon">🏷️</span>
+    <span class="tile-label">جۆرەکان</span>
+  </a>
+  <a href="{{ url_for('new_sale') }}" class="tile">
+    <span class="tile-icon">💰</span>
+    <span class="tile-label">فرۆشتنی نوێ</span>
+  </a>
+  <a href="{{ url_for('sales') }}" class="tile">
+    <span class="tile-icon">🧾</span>
+    <span class="tile-label">وەسڵەکان</span>
+  </a>
+  <a href="{{ url_for('reports') }}" class="tile">
+    <span class="tile-icon">📈</span>
+    <span class="tile-label">ڕاپۆرتەکان</span>
+  </a>
+  {% if current_role == 'admin' %}
+  <a href="{{ url_for('users') }}" class="tile">
+    <span class="tile-icon">👥</span>
+    <span class="tile-label">بەکارهێنەران</span>
+  </a>
+  {% endif %}
+</div>
+
+{% endblock %}

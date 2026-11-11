@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}وەسڵی فرۆشتن{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 no-print">
+  <h2 class="page-title mb-0"><span class="icon">🧾</span> وەسڵی فرۆشتن</h2>
+  <button class="btn btn-outline-secondary" onclick="window.print()"><span class="icon">🖨️</span> چاپکردن</button>
+</div>
+
+<div class="card invoice-box">
+  <div class="card-body">
+    <div class="text-center mb-4">
+      <h3>وەسڵی فرۆشتن</h3>
+      <p class="mb-0">ژمارە: {{ sale.invoice_number }}</p>
+      <p class="text-muted">{{ sale.sale_date }}</p>
+    </div>
+    {% if sale.customer_name %}
+    <p><strong>کڕیار:</strong> {{ sale.customer_name }}</p>
+    {% endif %}
+
+    <table class="table table-bordered">
+      <thead><tr><th>کاڵا</th><th>بڕ</th><th>نرخی یەک</th><th>کۆ</th></tr></thead>
+      <tbody>
+      {% for i in items %}
+        <tr>
+          <td>{{ i.product_name }}</td>
+          <td>{{ i.quantity }}</td>
+          <td>{{ "%.0f"|format(i.price) }}</td>
+          <td>{{ "%.0f"|format(i.subtotal) }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="row justify-content-end">
+      <div class="col-md-5">
+        <table class="table">
+          <tr><td>داشکاندن</td><td>{{ "%.0f"|format(sale.discount) }}</td></tr>
+          <tr><td><strong>کۆی گشتی</strong></td><td><strong>{{ "%.0f"|format(sale.total) }}</strong></td></tr>
+          <tr><td>بڕی درا</td><td>{{ "%.0f"|format(sale.paid) }}</td></tr>
+          <tr><td>ماوە</td><td>{{ "%.0f"|format(sale.paid - sale.total) }}</td></tr>
+        </table>
+      </div>
+    </div>
+    <p class="text-center text-muted mt-4">سوپاس بۆ کڕینتان</p>
+  </div>
+</div>
+{% endblock %}
